@@ -1,0 +1,29 @@
+{
+  "name": "expressjs",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server.js",
+    "start": "node server.js",
+    "prisma" : "npx prisma db pull && npx prisma generate"
+  },
+  "dependencies": {
+    "@prisma/adapter-mariadb": "^7.4.1",
+    "@prisma/client": "^7.4.1",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "mysql2": "^3.16.3",
+    "nodemon": "^3.1.11",
+    "sequelize": "^6.37.7"
+  },
+  "devDependencies": {
+    "@types/node": "^25.3.0",
+    "prisma": "^7.4.1"
+  }
+}
