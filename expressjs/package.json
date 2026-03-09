@@ -10,14 +10,17 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon server.js",
     "start": "node server.js",
-    "prisma" : "npx prisma db pull && npx prisma generate"
+    "prisma": "npx prisma db pull && npx prisma generate"
   },
   "dependencies": {
     "@prisma/adapter-mariadb": "^7.4.1",
     "@prisma/client": "^7.4.1",
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
     "mysql2": "^3.16.3",
     "nodemon": "^3.1.11",
     "sequelize": "^6.37.7"

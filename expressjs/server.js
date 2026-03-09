@@ -2,6 +2,8 @@ import express from "express";
 import { appError } from "./src/common/helpers/app-error.helper.js";
 import rootRouter from "./src/routers/root.router.js";
 import cors from "cors";
+import cookieParser from "cookie-parser";
+import { logApi } from "./src/common/middlewares/log-api.middleware.js";
 
 const app = express();
 
@@ -17,11 +19,15 @@ const app = express();
 
 app.use(cors({ origin: ["http://localhost:3000", "google.com"] }));
 
-app.get("", (request, response, next) => {
-    response.json("Hello world");
-});
-
+// app.get("", (request, response, next) => {
+//     response.json("Hello world");
+// });
+// để lấy được body (đảm bảo trước "/api")
 app.use(express.json())
+
+// để lấy cookie ( đảm bảo trước "/api")
+app.use(cookieParser());
+app.use(logApi("product"));
 
 app.use("/api", rootRouter);
 app.use(appError);
