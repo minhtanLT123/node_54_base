@@ -20,7 +20,8 @@ export const authController = {
   async getInfo(req, res, next) {
     const result = await authService.getInfo(req);
     const response = responseSuccess(true, `getInfo auths successfully`);
-
+    res.cookie("accessToken", result.accessToken);
+    res.cookie("refreshToken", result.refreshToken);
     res.status(response.statusCode).json(response);
   },
 };
