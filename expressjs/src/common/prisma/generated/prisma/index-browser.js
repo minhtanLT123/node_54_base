@@ -170,8 +170,14 @@ exports.Prisma.UsersScalarFieldEnum = {
   email: 'email',
   fullName: 'fullName',
   avatar: 'avatar',
+  age: 'age',
   totpSecret: 'totpSecret',
   googleId: 'googleId',
+  deletedBy: 'deletedBy',
+  isDeleted: 'isDeleted',
+  deletedAt: 'deletedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
   password: 'password'
 };
 

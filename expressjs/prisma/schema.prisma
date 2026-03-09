@@ -70,8 +70,14 @@ model Users {
   email         String          @unique(map: "email") @db.VarChar(255)
   fullName      String?         @db.VarChar(255)
   avatar        String?         @db.Text
+  age           Int?
   totpSecret    String?         @db.VarChar(255)
   googleId      String?         @db.VarChar(255)
+  deletedBy     Int             @default(0)
+  isDeleted     Boolean         @default(false)
+  deletedAt     DateTime?       @db.Timestamp(0)
+  createdAt     DateTime        @default(now()) @db.Timestamp(0)
+  updatedAt     DateTime        @default(now()) @db.Timestamp(0)
   password      String?         @db.VarChar(255)
   Articles      Articles[]
   Articles_demo Articles_demo[]

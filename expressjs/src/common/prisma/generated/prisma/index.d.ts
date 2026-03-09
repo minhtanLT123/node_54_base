@@ -5397,10 +5397,14 @@ export namespace Prisma {
 
   export type UsersAvgAggregateOutputType = {
     id: number | null
+    age: number | null
+    deletedBy: number | null
   }
 
   export type UsersSumAggregateOutputType = {
     id: number | null
+    age: number | null
+    deletedBy: number | null
   }
 
   export type UsersMinAggregateOutputType = {
@@ -5408,8 +5412,14 @@ export namespace Prisma {
     email: string | null
     fullName: string | null
     avatar: string | null
+    age: number | null
     totpSecret: string | null
     googleId: string | null
+    deletedBy: number | null
+    isDeleted: boolean | null
+    deletedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
     password: string | null
   }
 
@@ -5418,8 +5428,14 @@ export namespace Prisma {
     email: string | null
     fullName: string | null
     avatar: string | null
+    age: number | null
     totpSecret: string | null
     googleId: string | null
+    deletedBy: number | null
+    isDeleted: boolean | null
+    deletedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
     password: string | null
   }
 
@@ -5428,8 +5444,14 @@ export namespace Prisma {
     email: number
     fullName: number
     avatar: number
+    age: number
     totpSecret: number
     googleId: number
+    deletedBy: number
+    isDeleted: number
+    deletedAt: number
+    createdAt: number
+    updatedAt: number
     password: number
     _all: number
   }
@@ -5437,10 +5459,14 @@ export namespace Prisma {
 
   export type UsersAvgAggregateInputType = {
     id?: true
+    age?: true
+    deletedBy?: true
   }
 
   export type UsersSumAggregateInputType = {
     id?: true
+    age?: true
+    deletedBy?: true
   }
 
   export type UsersMinAggregateInputType = {
@@ -5448,8 +5474,14 @@ export namespace Prisma {
     email?: true
     fullName?: true
     avatar?: true
+    age?: true
     totpSecret?: true
     googleId?: true
+    deletedBy?: true
+    isDeleted?: true
+    deletedAt?: true
+    createdAt?: true
+    updatedAt?: true
     password?: true
   }
 
@@ -5458,8 +5490,14 @@ export namespace Prisma {
     email?: true
     fullName?: true
     avatar?: true
+    age?: true
     totpSecret?: true
     googleId?: true
+    deletedBy?: true
+    isDeleted?: true
+    deletedAt?: true
+    createdAt?: true
+    updatedAt?: true
     password?: true
   }
 
@@ -5468,8 +5506,14 @@ export namespace Prisma {
     email?: true
     fullName?: true
     avatar?: true
+    age?: true
     totpSecret?: true
     googleId?: true
+    deletedBy?: true
+    isDeleted?: true
+    deletedAt?: true
+    createdAt?: true
+    updatedAt?: true
     password?: true
     _all?: true
   }
@@ -5565,8 +5609,14 @@ export namespace Prisma {
     email: string
     fullName: string | null
     avatar: string | null
+    age: number | null
     totpSecret: string | null
     googleId: string | null
+    deletedBy: number
+    isDeleted: boolean
+    deletedAt: Date | null
+    createdAt: Date
+    updatedAt: Date
     password: string | null
     _count: UsersCountAggregateOutputType | null
     _avg: UsersAvgAggregateOutputType | null
@@ -5594,8 +5644,14 @@ export namespace Prisma {
     email?: boolean
     fullName?: boolean
     avatar?: boolean
+    age?: boolean
     totpSecret?: boolean
     googleId?: boolean
+    deletedBy?: boolean
+    isDeleted?: boolean
+    deletedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
     password?: boolean
     Articles?: boolean | Users$ArticlesArgs<ExtArgs>
     Articles_demo?: boolean | Users$Articles_demoArgs<ExtArgs>
@@ -5610,12 +5666,18 @@ export namespace Prisma {
     email?: boolean
     fullName?: boolean
     avatar?: boolean
+    age?: boolean
     totpSecret?: boolean
     googleId?: boolean
+    deletedBy?: boolean
+    isDeleted?: boolean
+    deletedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
     password?: boolean
   }
 
-  export type UsersOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "fullName" | "avatar" | "totpSecret" | "googleId" | "password", ExtArgs["result"]["users"]>
+  export type UsersOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "fullName" | "avatar" | "age" | "totpSecret" | "googleId" | "deletedBy" | "isDeleted" | "deletedAt" | "createdAt" | "updatedAt" | "password", ExtArgs["result"]["users"]>
   export type UsersInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     Articles?: boolean | Users$ArticlesArgs<ExtArgs>
     Articles_demo?: boolean | Users$Articles_demoArgs<ExtArgs>
@@ -5635,8 +5697,14 @@ export namespace Prisma {
       email: string
       fullName: string | null
       avatar: string | null
+      age: number | null
       totpSecret: string | null
       googleId: string | null
+      deletedBy: number
+      isDeleted: boolean
+      deletedAt: Date | null
+      createdAt: Date
+      updatedAt: Date
       password: string | null
     }, ExtArgs["result"]["users"]>
     composites: {}
@@ -6014,8 +6082,14 @@ export namespace Prisma {
     readonly email: FieldRef<"Users", 'String'>
     readonly fullName: FieldRef<"Users", 'String'>
     readonly avatar: FieldRef<"Users", 'String'>
+    readonly age: FieldRef<"Users", 'Int'>
     readonly totpSecret: FieldRef<"Users", 'String'>
     readonly googleId: FieldRef<"Users", 'String'>
+    readonly deletedBy: FieldRef<"Users", 'Int'>
+    readonly isDeleted: FieldRef<"Users", 'Boolean'>
+    readonly deletedAt: FieldRef<"Users", 'DateTime'>
+    readonly createdAt: FieldRef<"Users", 'DateTime'>
+    readonly updatedAt: FieldRef<"Users", 'DateTime'>
     readonly password: FieldRef<"Users", 'String'>
   }
     
@@ -6526,8 +6600,14 @@ export namespace Prisma {
     email: 'email',
     fullName: 'fullName',
     avatar: 'avatar',
+    age: 'age',
     totpSecret: 'totpSecret',
     googleId: 'googleId',
+    deletedBy: 'deletedBy',
+    isDeleted: 'isDeleted',
+    deletedAt: 'deletedAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
     password: 'password'
   };
 
@@ -6938,8 +7018,14 @@ export namespace Prisma {
     email?: StringFilter<"Users"> | string
     fullName?: StringNullableFilter<"Users"> | string | null
     avatar?: StringNullableFilter<"Users"> | string | null
+    age?: IntNullableFilter<"Users"> | number | null
     totpSecret?: StringNullableFilter<"Users"> | string | null
     googleId?: StringNullableFilter<"Users"> | string | null
+    deletedBy?: IntFilter<"Users"> | number
+    isDeleted?: BoolFilter<"Users"> | boolean
+    deletedAt?: DateTimeNullableFilter<"Users"> | Date | string | null
+    createdAt?: DateTimeFilter<"Users"> | Date | string
+    updatedAt?: DateTimeFilter<"Users"> | Date | string
     password?: StringNullableFilter<"Users"> | string | null
     Articles?: ArticlesListRelationFilter
     Articles_demo?: Articles_demoListRelationFilter
@@ -6951,8 +7037,14 @@ export namespace Prisma {
     email?: SortOrder
     fullName?: SortOrderInput | SortOrder
     avatar?: SortOrderInput | SortOrder
+    age?: SortOrderInput | SortOrder
     totpSecret?: SortOrderInput | SortOrder
     googleId?: SortOrderInput | SortOrder
+    deletedBy?: SortOrder
+    isDeleted?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
     password?: SortOrderInput | SortOrder
     Articles?: ArticlesOrderByRelationAggregateInput
     Articles_demo?: Articles_demoOrderByRelationAggregateInput
@@ -6968,8 +7060,14 @@ export namespace Prisma {
     NOT?: UsersWhereInput | UsersWhereInput[]
     fullName?: StringNullableFilter<"Users"> | string | null
     avatar?: StringNullableFilter<"Users"> | string | null
+    age?: IntNullableFilter<"Users"> | number | null
     totpSecret?: StringNullableFilter<"Users"> | string | null
     googleId?: StringNullableFilter<"Users"> | string | null
+    deletedBy?: IntFilter<"Users"> | number
+    isDeleted?: BoolFilter<"Users"> | boolean
+    deletedAt?: DateTimeNullableFilter<"Users"> | Date | string | null
+    createdAt?: DateTimeFilter<"Users"> | Date | string
+    updatedAt?: DateTimeFilter<"Users"> | Date | string
     password?: StringNullableFilter<"Users"> | string | null
     Articles?: ArticlesListRelationFilter
     Articles_demo?: Articles_demoListRelationFilter
@@ -6981,8 +7079,14 @@ export namespace Prisma {
     email?: SortOrder
     fullName?: SortOrderInput | SortOrder
     avatar?: SortOrderInput | SortOrder
+    age?: SortOrderInput | SortOrder
     totpSecret?: SortOrderInput | SortOrder
     googleId?: SortOrderInput | SortOrder
+    deletedBy?: SortOrder
+    isDeleted?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
     password?: SortOrderInput | SortOrder
     _count?: UsersCountOrderByAggregateInput
     _avg?: UsersAvgOrderByAggregateInput
@@ -6999,8 +7103,14 @@ export namespace Prisma {
     email?: StringWithAggregatesFilter<"Users"> | string
     fullName?: StringNullableWithAggregatesFilter<"Users"> | string | null
     avatar?: StringNullableWithAggregatesFilter<"Users"> | string | null
+    age?: IntNullableWithAggregatesFilter<"Users"> | number | null
     totpSecret?: StringNullableWithAggregatesFilter<"Users"> | string | null
     googleId?: StringNullableWithAggregatesFilter<"Users"> | string | null
+    deletedBy?: IntWithAggregatesFilter<"Users"> | number
+    isDeleted?: BoolWithAggregatesFilter<"Users"> | boolean
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"Users"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Users"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Users"> | Date | string
     password?: StringNullableWithAggregatesFilter<"Users"> | string | null
   }
 
@@ -7312,8 +7422,14 @@ export namespace Prisma {
     email: string
     fullName?: string | null
     avatar?: string | null
+    age?: number | null
     totpSecret?: string | null
     googleId?: string | null
+    deletedBy?: number
+    isDeleted?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     password?: string | null
     Articles?: ArticlesCreateNestedManyWithoutUsersInput
     Articles_demo?: Articles_demoCreateNestedManyWithoutUsersInput
@@ -7325,8 +7441,14 @@ export namespace Prisma {
     email: string
     fullName?: string | null
     avatar?: string | null
+    age?: number | null
     totpSecret?: string | null
     googleId?: string | null
+    deletedBy?: number
+    isDeleted?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     password?: string | null
     Articles?: ArticlesUncheckedCreateNestedManyWithoutUsersInput
     Articles_demo?: Articles_demoUncheckedCreateNestedManyWithoutUsersInput
@@ -7337,8 +7459,14 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     fullName?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableIntFieldUpdateOperationsInput | number | null
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedBy?: IntFieldUpdateOperationsInput | number
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     password?: NullableStringFieldUpdateOperationsInput | string | null
     Articles?: ArticlesUpdateManyWithoutUsersNestedInput
     Articles_demo?: Articles_demoUpdateManyWithoutUsersNestedInput
@@ -7350,8 +7478,14 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     fullName?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableIntFieldUpdateOperationsInput | number | null
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedBy?: IntFieldUpdateOperationsInput | number
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     password?: NullableStringFieldUpdateOperationsInput | string | null
     Articles?: ArticlesUncheckedUpdateManyWithoutUsersNestedInput
     Articles_demo?: Articles_demoUncheckedUpdateManyWithoutUsersNestedInput
@@ -7363,8 +7497,14 @@ export namespace Prisma {
     email: string
     fullName?: string | null
     avatar?: string | null
+    age?: number | null
     totpSecret?: string | null
     googleId?: string | null
+    deletedBy?: number
+    isDeleted?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     password?: string | null
   }
 
@@ -7372,8 +7512,14 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     fullName?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableIntFieldUpdateOperationsInput | number | null
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedBy?: IntFieldUpdateOperationsInput | number
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     password?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -7382,8 +7528,14 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     fullName?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableIntFieldUpdateOperationsInput | number | null
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedBy?: IntFieldUpdateOperationsInput | number
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     password?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -7829,13 +7981,21 @@ export namespace Prisma {
     email?: SortOrder
     fullName?: SortOrder
     avatar?: SortOrder
+    age?: SortOrder
     totpSecret?: SortOrder
     googleId?: SortOrder
+    deletedBy?: SortOrder
+    isDeleted?: SortOrder
+    deletedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
     password?: SortOrder
   }
 
   export type UsersAvgOrderByAggregateInput = {
     id?: SortOrder
+    age?: SortOrder
+    deletedBy?: SortOrder
   }
 
   export type UsersMaxOrderByAggregateInput = {
@@ -7843,8 +8003,14 @@ export namespace Prisma {
     email?: SortOrder
     fullName?: SortOrder
     avatar?: SortOrder
+    age?: SortOrder
     totpSecret?: SortOrder
     googleId?: SortOrder
+    deletedBy?: SortOrder
+    isDeleted?: SortOrder
+    deletedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
     password?: SortOrder
   }
 
@@ -7853,13 +8019,21 @@ export namespace Prisma {
     email?: SortOrder
     fullName?: SortOrder
     avatar?: SortOrder
+    age?: SortOrder
     totpSecret?: SortOrder
     googleId?: SortOrder
+    deletedBy?: SortOrder
+    isDeleted?: SortOrder
+    deletedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
     password?: SortOrder
   }
 
   export type UsersSumOrderByAggregateInput = {
     id?: SortOrder
+    age?: SortOrder
+    deletedBy?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -8372,8 +8546,14 @@ export namespace Prisma {
     email: string
     fullName?: string | null
     avatar?: string | null
+    age?: number | null
     totpSecret?: string | null
     googleId?: string | null
+    deletedBy?: number
+    isDeleted?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     password?: string | null
     Articles_demo?: Articles_demoCreateNestedManyWithoutUsersInput
     Orders?: OrdersCreateNestedManyWithoutUsersInput
@@ -8384,8 +8564,14 @@ export namespace Prisma {
     email: string
     fullName?: string | null
     avatar?: string | null
+    age?: number | null
     totpSecret?: string | null
     googleId?: string | null
+    deletedBy?: number
+    isDeleted?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     password?: string | null
     Articles_demo?: Articles_demoUncheckedCreateNestedManyWithoutUsersInput
     Orders?: OrdersUncheckedCreateNestedManyWithoutUsersInput
@@ -8411,8 +8597,14 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     fullName?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableIntFieldUpdateOperationsInput | number | null
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedBy?: IntFieldUpdateOperationsInput | number
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     password?: NullableStringFieldUpdateOperationsInput | string | null
     Articles_demo?: Articles_demoUpdateManyWithoutUsersNestedInput
     Orders?: OrdersUpdateManyWithoutUsersNestedInput
@@ -8423,8 +8615,14 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     fullName?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableIntFieldUpdateOperationsInput | number | null
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedBy?: IntFieldUpdateOperationsInput | number
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     password?: NullableStringFieldUpdateOperationsInput | string | null
     Articles_demo?: Articles_demoUncheckedUpdateManyWithoutUsersNestedInput
     Orders?: OrdersUncheckedUpdateManyWithoutUsersNestedInput
@@ -8434,8 +8632,14 @@ export namespace Prisma {
     email: string
     fullName?: string | null
     avatar?: string | null
+    age?: number | null
     totpSecret?: string | null
     googleId?: string | null
+    deletedBy?: number
+    isDeleted?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     password?: string | null
     Articles?: ArticlesCreateNestedManyWithoutUsersInput
     Orders?: OrdersCreateNestedManyWithoutUsersInput
@@ -8446,8 +8650,14 @@ export namespace Prisma {
     email: string
     fullName?: string | null
     avatar?: string | null
+    age?: number | null
     totpSecret?: string | null
     googleId?: string | null
+    deletedBy?: number
+    isDeleted?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     password?: string | null
     Articles?: ArticlesUncheckedCreateNestedManyWithoutUsersInput
     Orders?: OrdersUncheckedCreateNestedManyWithoutUsersInput
@@ -8473,8 +8683,14 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     fullName?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableIntFieldUpdateOperationsInput | number | null
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedBy?: IntFieldUpdateOperationsInput | number
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     password?: NullableStringFieldUpdateOperationsInput | string | null
     Articles?: ArticlesUpdateManyWithoutUsersNestedInput
     Orders?: OrdersUpdateManyWithoutUsersNestedInput
@@ -8485,8 +8701,14 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     fullName?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableIntFieldUpdateOperationsInput | number | null
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedBy?: IntFieldUpdateOperationsInput | number
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     password?: NullableStringFieldUpdateOperationsInput | string | null
     Articles?: ArticlesUncheckedUpdateManyWithoutUsersNestedInput
     Orders?: OrdersUncheckedUpdateManyWithoutUsersNestedInput
@@ -8540,8 +8762,14 @@ export namespace Prisma {
     email: string
     fullName?: string | null
     avatar?: string | null
+    age?: number | null
     totpSecret?: string | null
     googleId?: string | null
+    deletedBy?: number
+    isDeleted?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     password?: string | null
     Articles?: ArticlesCreateNestedManyWithoutUsersInput
     Articles_demo?: Articles_demoCreateNestedManyWithoutUsersInput
@@ -8552,8 +8780,14 @@ export namespace Prisma {
     email: string
     fullName?: string | null
     avatar?: string | null
+    age?: number | null
     totpSecret?: string | null
     googleId?: string | null
+    deletedBy?: number
+    isDeleted?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     password?: string | null
     Articles?: ArticlesUncheckedCreateNestedManyWithoutUsersInput
     Articles_demo?: Articles_demoUncheckedCreateNestedManyWithoutUsersInput
@@ -8605,8 +8839,14 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     fullName?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableIntFieldUpdateOperationsInput | number | null
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedBy?: IntFieldUpdateOperationsInput | number
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     password?: NullableStringFieldUpdateOperationsInput | string | null
     Articles?: ArticlesUpdateManyWithoutUsersNestedInput
     Articles_demo?: Articles_demoUpdateManyWithoutUsersNestedInput
@@ -8617,8 +8857,14 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     fullName?: NullableStringFieldUpdateOperationsInput | string | null
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableIntFieldUpdateOperationsInput | number | null
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedBy?: IntFieldUpdateOperationsInput | number
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     password?: NullableStringFieldUpdateOperationsInput | string | null
     Articles?: ArticlesUncheckedUpdateManyWithoutUsersNestedInput
     Articles_demo?: Articles_demoUncheckedUpdateManyWithoutUsersNestedInput
