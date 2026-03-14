@@ -19,9 +19,22 @@ export const authController = {
 
   async getInfo(req, res, next) {
     const result = await authService.getInfo(req);
-    const response = responseSuccess(true, `getInfo auths successfully`);
+    const response = responseSuccess(result, `getInfo auths successfully`);
+    res.status(response.statusCode).json(response);
+  },
+
+  async refreshToken(req, res, next) {
+    const result = await authService.refreshToken(req);
+    const response = responseSuccess(true, `refreshToken auths successfully`);
     res.cookie("accessToken", result.accessToken);
     res.cookie("refreshToken", result.refreshToken);
     res.status(response.statusCode).json(response);
+  },
+  async googleCallback(req, res, next) {
+    console.log(req.user);
+    res.cookie("accessToken", result.accessToken);
+    res.cookie("refreshToken", result.refreshToken);
+
+    res.redirect("http://localhost:3000/login-callback");
   },
 };

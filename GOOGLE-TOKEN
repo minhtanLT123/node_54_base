@@ -1,0 +1,12 @@
+{
+  "web": {
+    "client_id": "729815911870-u5jhmfvqn96lg6ootjgceqdan7j37c35.apps.googleusercontent.com",
+    "project_id": "node-54-tan",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_secret": "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",
+    "redirect_uris": ["http://localhost:3069/api/auth/google/callback"],
+    "javascript_origins": ["http://localhost:3069", "http://localhost:3000"]
+  }
+}

@@ -7,12 +7,17 @@ export const protect = async (req, res, next) => {
   if (!accessToken) {
     throw new UnauthorizedException("Không có token");
   }
-  const decode = tokenService.verityAccessToken(accessToken);
+  const decode = tokenService.verifyAccessToken(accessToken);
   const userExits = await prisma.users.findUnique({
     where: {
       id: decode.userId,
     },
   });
+
+  if (!userExits) {
+    throw new UnauthorizedException("Người dùng không tồn tại");
+  }
+
   req.user = userExits;
   // console.log("protect", { accessToken, decode, userExits });
   next();

@@ -4,6 +4,7 @@ import rootRouter from "./src/routers/root.router.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { logApi } from "./src/common/middlewares/log-api.middleware.js";
+import { initLoginGooglePassport } from "./src/common/passport/login-google.passport.js";
 
 const app = express();
 
@@ -23,18 +24,19 @@ app.use(cors({ origin: ["http://localhost:3000", "google.com"] }));
 //     response.json("Hello world");
 // });
 // để lấy được body (đảm bảo trước "/api")
-app.use(express.json())
+app.use(express.json());
 
 // để lấy cookie ( đảm bảo trước "/api")
 app.use(cookieParser());
 app.use(logApi("product"));
+initLoginGooglePassport();
 
 app.use("/api", rootRouter);
 app.use(appError);
 
 const PORT = 3069;
 app.listen(PORT, () => {
-    console.log(`Server online at port: ${PORT}`);
+  console.log(`Server online at port: ${PORT}`);
 });
 
 // js Version cũ: common-js
