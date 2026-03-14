@@ -10,16 +10,9 @@ authRouter.post("/register", authController.register);
 authRouter.post("/login", authController.login);
 authRouter.get("/get-info", protect, authController.getInfo);
 authRouter.post("/refresh-token", authController.refreshToken);
-authRouter.get(
-  "/google",
-  passport.authenticate("google", { scope: ["profile", "email"] }),
-);
 
-authRouter.get(
-  "/google",
-  passport.authenticate("google", { scope: ["profile", "email"] }),
-);
-
+// khi người dùng click nút login google sẽ gọi api get bằng thanh url
+// passport sẽ được kích hoạt và chuyển người dùng tới trang chọn tài khoản (gmail) và đồng scope mà mình đã yêu cầu
 authRouter.get(
   "/google",
   passport.authenticate("google", { scope: ["profile", "email"] }),

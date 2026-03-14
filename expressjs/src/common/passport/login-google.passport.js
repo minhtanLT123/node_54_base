@@ -1,12 +1,13 @@
-// var GoogleStrategy = require("passport-google-oauth20").Strategy;
-import passport, { Passport } from "passport";
-import { Strategy as GoogleStrategy } from "passport-google-oauth20";
+import passport from "passport";
 import {
   GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET,
 } from "../constant/app.constant.js";
+
+import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { prisma } from "../prisma/connect.prisma.js";
 import { tokenService } from "../../services/token.service.js";
+// var GoogleStrategy = require("passport-google-oauth20").Strategy;
 
 export const initLoginGooglePassport = () => {
   passport.use(
@@ -22,12 +23,14 @@ export const initLoginGooglePassport = () => {
         const email = profile.emails[0].value;
         const isEmailVerified = profile.emails[0].verified;
         const avatar = profile.photos[0].value;
-        console.log({ fullName, googleId, email, isEmailVerified, avatar });
 
+        // console.dir({ accessTokenGG, refreshTokenGG, profile }, { depth: null, color: true });
+        console.log({ fullName, googleId, email, isEmailVerified, avatar });
         if (!isEmailVerified) {
           // không hợp lệ
           return cb(new Error("Email chưa verify"), null);
         }
+
         let userExits = await prisma.users.findUnique({
           where: {
             email: email,
@@ -35,7 +38,7 @@ export const initLoginGooglePassport = () => {
         });
 
         if (!userExits) {
-          prisma.users.create({
+          userExits = await prisma.users.create({
             data: {
               email: email,
               fullName: fullName,
@@ -45,16 +48,14 @@ export const initLoginGooglePassport = () => {
           });
         }
 
-        // console.dir(
-        //   { accessTokenGG, refreshTokenGG, profile },
-        //   { depth: null },
-        // );
-        const accessToken = tokenService.createAccessToken(userExits);
-        const refreshToken = tokenService.createRefreshToken(userExits);
+        const accessToken = tokenService.createAccessToken(userExits.id);
+        const refreshToken = tokenService.createRefreshToken(userExits.id);
+
         // hợp lệ
-        return cb(null, "token");
-        // không hợp lệ
-        // return cb("err", null);
+        return cb(null, {
+          accessToken: accessToken,
+          refreshToken: refreshToken,
+        });
       },
     ),
   );
