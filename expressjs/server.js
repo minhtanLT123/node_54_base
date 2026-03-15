@@ -30,6 +30,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(logApi("product"));
 initLoginGooglePassport();
+app.use(express.static("public"));
 
 app.use("/api", rootRouter);
 app.use(appError);
