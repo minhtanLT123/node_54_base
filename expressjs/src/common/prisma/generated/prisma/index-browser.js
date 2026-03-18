@@ -181,6 +181,109 @@ exports.Prisma.UsersScalarFieldEnum = {
   password: 'password'
 };
 
+exports.Prisma.DepartmentsScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  managerId: 'managerId',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.RolesScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  level: 'level'
+};
+
+exports.Prisma.EmployeesScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  fullName: 'fullName',
+  password: 'password',
+  avatar: 'avatar',
+  departmentId: 'departmentId',
+  roleId: 'roleId',
+  joinDate: 'joinDate',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AttendancesScalarFieldEnum = {
+  id: 'id',
+  employeeId: 'employeeId',
+  date: 'date',
+  checkIn: 'checkIn',
+  checkOut: 'checkOut',
+  workingHours: 'workingHours',
+  lateMinutes: 'lateMinutes'
+};
+
+exports.Prisma.LeaveBalancesScalarFieldEnum = {
+  id: 'id',
+  employeeId: 'employeeId',
+  year: 'year',
+  totalDays: 'totalDays',
+  usedDays: 'usedDays',
+  remainDays: 'remainDays'
+};
+
+exports.Prisma.LeaveRequestsScalarFieldEnum = {
+  id: 'id',
+  employeeId: 'employeeId',
+  type: 'type',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  totalDays: 'totalDays',
+  reason: 'reason',
+  status: 'status',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.OvertimeRequestsScalarFieldEnum = {
+  id: 'id',
+  employeeId: 'employeeId',
+  date: 'date',
+  startTime: 'startTime',
+  endTime: 'endTime',
+  hours: 'hours',
+  reason: 'reason',
+  status: 'status',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.ApprovalsScalarFieldEnum = {
+  id: 'id',
+  requestType: 'requestType',
+  requestId: 'requestId',
+  approverId: 'approverId',
+  level: 'level',
+  status: 'status',
+  comment: 'comment',
+  approvedAt: 'approvedAt',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.PayrollsScalarFieldEnum = {
+  id: 'id',
+  employeeId: 'employeeId',
+  month: 'month',
+  year: 'year',
+  baseSalary: 'baseSalary',
+  overtimePay: 'overtimePay',
+  deduction: 'deduction',
+  bonus: 'bonus',
+  netSalary: 'netSalary'
+};
+
+exports.Prisma.NotificationsScalarFieldEnum = {
+  id: 'id',
+  employeeId: 'employeeId',
+  title: 'title',
+  content: 'content',
+  isRead: 'isRead',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -217,13 +320,84 @@ exports.Prisma.UsersOrderByRelevanceFieldEnum = {
   password: 'password'
 };
 
+exports.Prisma.DepartmentsOrderByRelevanceFieldEnum = {
+  name: 'name'
+};
+
+exports.Prisma.RolesOrderByRelevanceFieldEnum = {
+  name: 'name'
+};
+
+exports.Prisma.EmployeesOrderByRelevanceFieldEnum = {
+  email: 'email',
+  fullName: 'fullName',
+  password: 'password',
+  avatar: 'avatar'
+};
+
+exports.Prisma.LeaveRequestsOrderByRelevanceFieldEnum = {
+  reason: 'reason'
+};
+
+exports.Prisma.OvertimeRequestsOrderByRelevanceFieldEnum = {
+  reason: 'reason'
+};
+
+exports.Prisma.ApprovalsOrderByRelevanceFieldEnum = {
+  comment: 'comment'
+};
+
+exports.Prisma.NotificationsOrderByRelevanceFieldEnum = {
+  title: 'title',
+  content: 'content'
+};
+exports.EmployeeStatus = exports.$Enums.EmployeeStatus = {
+  ACTIVE: 'ACTIVE',
+  PROBATION: 'PROBATION',
+  RESIGNED: 'RESIGNED',
+  TERMINATED: 'TERMINATED'
+};
+
+exports.LeaveType = exports.$Enums.LeaveType = {
+  ANNUAL: 'ANNUAL',
+  SICK: 'SICK',
+  UNPAID: 'UNPAID',
+  MATERNITY: 'MATERNITY'
+};
+
+exports.RequestStatus = exports.$Enums.RequestStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+};
+
+exports.RequestType = exports.$Enums.RequestType = {
+  LEAVE: 'LEAVE',
+  OVERTIME: 'OVERTIME'
+};
+
+exports.ApprovalStatus = exports.$Enums.ApprovalStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+};
 
 exports.Prisma.ModelName = {
   Articles: 'Articles',
   Articles_demo: 'Articles_demo',
   Foods: 'Foods',
   Orders: 'Orders',
-  Users: 'Users'
+  Users: 'Users',
+  Departments: 'Departments',
+  Roles: 'Roles',
+  Employees: 'Employees',
+  Attendances: 'Attendances',
+  LeaveBalances: 'LeaveBalances',
+  LeaveRequests: 'LeaveRequests',
+  OvertimeRequests: 'OvertimeRequests',
+  Approvals: 'Approvals',
+  Payrolls: 'Payrolls',
+  Notifications: 'Notifications'
 };
 
 /**

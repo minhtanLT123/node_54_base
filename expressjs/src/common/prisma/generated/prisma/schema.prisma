@@ -83,3 +83,236 @@ model Users {
   Articles_demo Articles_demo[]
   Orders        Orders[]
 }
+
+//////////////////////////////////////////////////////
+// ENUM
+//////////////////////////////////////////////////////
+
+enum EmployeeStatus {
+  ACTIVE
+  PROBATION
+  RESIGNED
+  TERMINATED
+}
+
+enum RequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum LeaveType {
+  ANNUAL
+  SICK
+  UNPAID
+  MATERNITY
+}
+
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum RequestType {
+  LEAVE
+  OVERTIME
+}
+
+//////////////////////////////////////////////////////
+// ORGANIZATION
+//////////////////////////////////////////////////////
+
+model Departments {
+  id        Int    @id @default(autoincrement())
+  name      String @unique
+  managerId Int?
+
+  manager   Employees?  @relation("DeptManager", fields: [managerId], references: [id])
+  Employees Employees[]
+
+  createdAt DateTime @default(now())
+}
+
+model Roles {
+  id        Int         @id @default(autoincrement())
+  name      String      @unique
+  level     Int // ⭐ hierarchy level (1 TL, 2 Manager, 3 Director)
+  Employees Employees[]
+}
+
+//////////////////////////////////////////////////////
+// EMPLOYEE
+//////////////////////////////////////////////////////
+
+model Employees {
+  id       Int     @id @default(autoincrement())
+  email    String  @unique
+  fullName String
+  password String?
+  avatar   String?
+
+  departmentId Int?
+  roleId       Int?
+
+  joinDate DateTime?
+  status   EmployeeStatus @default(ACTIVE)
+
+  Departments        Departments?  @relation(fields: [departmentId], references: [id])
+  Roles              Roles?        @relation(fields: [roleId], references: [id])
+  managedDepartments Departments[] @relation("DeptManager")
+
+  Attendances      Attendances[]
+  LeaveRequests    LeaveRequests[]
+  OvertimeRequests OvertimeRequests[]
+  Approvals        Approvals[]
+  Payrolls         Payrolls[]
+  LeaveBalances    LeaveBalances[]
+  Notifications    Notifications[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+//////////////////////////////////////////////////////
+// ATTENDANCE
+//////////////////////////////////////////////////////
+
+model Attendances {
+  id         Int      @id @default(autoincrement())
+  employeeId Int
+  date       DateTime @db.Date
+
+  checkIn  DateTime?
+  checkOut DateTime?
+
+  workingHours Float?
+  lateMinutes  Int    @default(0)
+
+  Employees Employees @relation(fields: [employeeId], references: [id])
+
+  @@unique([employeeId, date])
+}
+
+//////////////////////////////////////////////////////
+// LEAVE BALANCE
+//////////////////////////////////////////////////////
+
+model LeaveBalances {
+  id         Int @id @default(autoincrement())
+  employeeId Int
+  year       Int
+
+  totalDays  Float
+  usedDays   Float @default(0)
+  remainDays Float
+
+  Employees Employees @relation(fields: [employeeId], references: [id])
+
+  @@unique([employeeId, year])
+}
+
+//////////////////////////////////////////////////////
+// LEAVE REQUEST
+//////////////////////////////////////////////////////
+
+model LeaveRequests {
+  id         Int @id @default(autoincrement())
+  employeeId Int
+
+  type      LeaveType
+  startDate DateTime  @db.Date
+  endDate   DateTime  @db.Date
+  totalDays Float
+
+  reason String?
+  status RequestStatus @default(PENDING)
+
+  createdAt DateTime @default(now())
+
+  Employees Employees @relation(fields: [employeeId], references: [id])
+}
+
+//////////////////////////////////////////////////////
+// OVERTIME REQUEST
+//////////////////////////////////////////////////////
+
+model OvertimeRequests {
+  id         Int @id @default(autoincrement())
+  employeeId Int
+
+  date      DateTime @db.Date
+  startTime DateTime
+  endTime   DateTime
+  hours     Float
+
+  reason String?
+  status RequestStatus @default(PENDING)
+
+  createdAt DateTime @default(now())
+
+  Employees Employees @relation(fields: [employeeId], references: [id])
+}
+
+//////////////////////////////////////////////////////
+// APPROVAL WORKFLOW (3 LEVEL FIXED)
+//////////////////////////////////////////////////////
+
+model Approvals {
+  id Int @id @default(autoincrement())
+
+  requestType RequestType
+  requestId   Int
+
+  approverId Int
+  level      Int // ⭐ 1 TeamLeader, 2 Manager, 3 Director
+
+  status     ApprovalStatus @default(PENDING)
+  comment    String?
+  approvedAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  Employees Employees @relation(fields: [approverId], references: [id])
+
+  @@index([requestType, requestId])
+}
+
+//////////////////////////////////////////////////////
+// PAYROLL
+//////////////////////////////////////////////////////
+
+model Payrolls {
+  id         Int @id @default(autoincrement())
+  employeeId Int
+
+  month Int
+  year  Int
+
+  baseSalary  Float
+  overtimePay Float
+  deduction   Float
+  bonus       Float
+  netSalary   Float
+
+  Employees Employees @relation(fields: [employeeId], references: [id])
+
+  @@unique([employeeId, month, year])
+}
+
+//////////////////////////////////////////////////////
+// NOTIFICATION
+//////////////////////////////////////////////////////
+
+model Notifications {
+  id         Int @id @default(autoincrement())
+  employeeId Int
+
+  title   String
+  content String
+  isRead  Boolean @default(false)
+
+  createdAt DateTime @default(now())
+
+  Employees Employees @relation(fields: [employeeId], references: [id])
+}
