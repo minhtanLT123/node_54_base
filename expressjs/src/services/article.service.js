@@ -43,6 +43,17 @@ export const artcileService = {
       items: resultPrisma,
     };
   },
+  async findOne(req) {
+    const { articleId } = req.params;
+
+    const article = await prisma.articles.findUnique({
+      where: {
+        id: Number(articleId),
+      },
+    });
+
+    return article;
+  },
 
   // Body
   // để nhận được body phải thiết lập middleware json ở server.js

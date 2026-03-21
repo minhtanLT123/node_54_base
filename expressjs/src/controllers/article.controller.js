@@ -11,6 +11,15 @@ export const articleController = {
     );
     res.status(response.statusCode).json(response);
   },
+  async findOne(req, res, next) {
+    const result = await artcileService.findOne(req);
+    const response = responseSuccess(
+      result,
+      "Lấy chi tiết một artcile thành công",
+      201,
+    );
+    res.status(response.statusCode).json(response);
+  },
   async create(req, res, next) {
     const result = await artcileService.create(req);
     const response = responseSuccess(result, "Tạo artcile thành công");

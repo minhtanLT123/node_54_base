@@ -7,6 +7,8 @@ import { uploadMemoryStorage } from "../common/multer/memory-storage.multer.js";
 const userRouter = express.Router();
 
 // Tạo route CRUD
+userRouter.get("", userController.findAll);
+userRouter.get("/:id", userController.findOne);
 userRouter.post(
   "/avatar-local",
   protect,

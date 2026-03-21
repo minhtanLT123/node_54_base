@@ -3,6 +3,7 @@ import { BadRequestException } from "../common/helpers/exception.helper.js";
 import { prisma } from "../common/prisma/connect.prisma.js";
 import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
+import { buildQueryPrisma } from "../common/helpers/build-query-prisma.helper.js";
 
 cloudinary.config({
   // true là bắt buộc BE phải có domain https (có s)
@@ -20,6 +21,49 @@ cloudinary.config({
 });
 
 export const userService = {
+  async findAll(req) {
+    // sequelize
+    // const resultSequelize = await Article.findAll();
+
+    const { index, page, pageSize, where } = buildQueryPrisma(req);
+
+    const resultPrismaPromise = prisma.users.findMany({
+      where: where,
+      skip: index, // skip tương đương với OFFSET
+      take: pageSize, // take tương đương với LIMIT
+    });
+    const totalItemPromise = prisma.users.count({
+      // ở findMany mà where cái gì thì đưa vào count giống như vậy
+      where: where,
+    });
+
+    const [resultPrisma, totalItem] = await Promise.all([
+      resultPrismaPromise,
+      totalItemPromise,
+    ]);
+
+    const totalPage = Math.ceil(totalItem / pageSize);
+
+    return {
+      totalItem: totalItem,
+      totalPage: totalPage,
+      page: page,
+      pageSize: pageSize,
+      items: resultPrisma,
+    };
+  },
+
+  async findOne(req) {
+    const { id } = req.params;
+
+    const user = await prisma.users.findUnique({
+      where: {
+        id: Number(id),
+      },
+    });
+
+    return user;
+  },
   async avatarLocal(req) {
     // Logic to create a user
 
@@ -41,7 +85,7 @@ export const userService = {
         id: req.user.id,
       },
       data: {
-        avatar: req.user.filename,
+        avatar: req.file.filename,
       },
     });
 

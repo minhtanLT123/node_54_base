@@ -284,6 +284,40 @@ exports.Prisma.NotificationsScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.ChatGroupMembersScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  chatGroupId: 'chatGroupId',
+  deletedBy: 'deletedBy',
+  isDeleted: 'isDeleted',
+  deletedAt: 'deletedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ChatGroupsScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  ownerId: 'ownerId',
+  deletedBy: 'deletedBy',
+  isDeleted: 'isDeleted',
+  deletedAt: 'deletedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ChatMessagesScalarFieldEnum = {
+  id: 'id',
+  chatGroupId: 'chatGroupId',
+  userIdSender: 'userIdSender',
+  messageText: 'messageText',
+  deletedBy: 'deletedBy',
+  isDeleted: 'isDeleted',
+  deletedAt: 'deletedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -351,6 +385,14 @@ exports.Prisma.NotificationsOrderByRelevanceFieldEnum = {
   title: 'title',
   content: 'content'
 };
+
+exports.Prisma.ChatGroupsOrderByRelevanceFieldEnum = {
+  name: 'name'
+};
+
+exports.Prisma.ChatMessagesOrderByRelevanceFieldEnum = {
+  messageText: 'messageText'
+};
 exports.EmployeeStatus = exports.$Enums.EmployeeStatus = {
   ACTIVE: 'ACTIVE',
   PROBATION: 'PROBATION',
@@ -397,7 +439,10 @@ exports.Prisma.ModelName = {
   OvertimeRequests: 'OvertimeRequests',
   Approvals: 'Approvals',
   Payrolls: 'Payrolls',
-  Notifications: 'Notifications'
+  Notifications: 'Notifications',
+  ChatGroupMembers: 'ChatGroupMembers',
+  ChatGroups: 'ChatGroups',
+  ChatMessages: 'ChatMessages'
 };
 
 /**
