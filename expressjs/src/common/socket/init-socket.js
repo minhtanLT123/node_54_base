@@ -3,6 +3,42 @@ import { Server } from "socket.io";
 import { prisma } from "../prisma/connect.prisma.js";
 import { tokenService } from "../../services/token.service.js";
 
+const getAuthorizedUser = async (accessToken) => {
+  if (!accessToken) {
+    throw new Error("Thiếu accessToken");
+  }
+
+  const { userId } = tokenService.verifyAccessToken(accessToken, {
+    ignoreExpiration: true,
+  });
+  const user = await prisma.users.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (!user) {
+    throw new Error("User không tồn tại");
+  }
+
+  return user;
+};
+
+const ensureChatMember = async (chatGroupId, userId) => {
+  const membership = await prisma.chatGroupMembers.findFirst({
+    where: {
+      chatGroupId,
+      userId,
+    },
+  });
+
+  if (!membership) {
+    throw new Error("Bạn không thuộc phòng chat này");
+  }
+
+  return membership;
+};
+
 export const initSocket = (app) => {
   const httpServer = createServer(app);
   const io = new Server(httpServer, {
@@ -16,21 +52,14 @@ export const initSocket = (app) => {
     socket.on("CREATE_ROOM", async (data, cb) => {
       try {
         let { targetUserIds, accessToken, name } = data;
+        const userExits = await getAuthorizedUser(accessToken);
 
-        const { userId } = tokenService.verifyAccessToken(accessToken, {
-          ignoreExpiration: true,
-        });
-        const userExits = await prisma.users.findUnique({
-          where: {
-            id: userId,
-          },
-        });
-        if (!userExits) {
-          throw new Error("User không tồn tại");
+        if (!Array.isArray(targetUserIds) || targetUserIds.length === 0) {
+          throw new Error("Danh sách thành viên không hợp lệ");
         }
 
         const targetUserIdsSet = new Set([...targetUserIds, userExits.id]);
-        const targetUserIdsUnique = Array.from(targetUserIdsSet);
+        const targetUserIdsUnique = Array.from(targetUserIdsSet).map(Number);
 
         if (targetUserIdsUnique.length === 2) {
           // tạo chatGroup 1 - 1
@@ -41,9 +70,6 @@ export const initSocket = (app) => {
           let chatGroup = await prisma.chatGroups.findFirst({
             where: {
               ChatGroupMembers: {
-                // every: tất cả phải khớp
-                // none: không khớp
-                // some: chỉ cần 1 cái khớp
                 every: {
                   userId: {
                     in: targetUserIdsUnique,
@@ -51,7 +77,17 @@ export const initSocket = (app) => {
                 },
               },
             },
+            include: {
+              ChatGroupMembers: true,
+            },
           });
+
+          if (
+            chatGroup &&
+            chatGroup.ChatGroupMembers.length !== targetUserIdsUnique.length
+          ) {
+            chatGroup = null;
+          }
 
           // nếu chưa tồn tại chatGroup thì tạo mới
           if (!chatGroup) {
@@ -77,8 +113,6 @@ export const initSocket = (app) => {
             });
           }
 
-          // nếu đã tồn tại, thì đi tiếp
-          chatGroup;
           socket.join(`chat:${chatGroup.id}`);
           cb({
             status: "success",
@@ -91,7 +125,7 @@ export const initSocket = (app) => {
             targetUserIds,
             accessToken,
             targetUserIdsUnique,
-            userId,
+            userId: userExits.id,
             chatGroup,
           });
         } else {
@@ -129,62 +163,84 @@ export const initSocket = (app) => {
     // khi đã có chatGroup rồi
     // user click vào một chatGroup (1 box chat)
     socket.on("JOIN_ROOM", async (data, cb) => {
-      const { chatGroupId, accessToken } = data;
+      try {
+        const { chatGroupId, accessToken } = data;
+        const normalizedChatGroupId = Number(chatGroupId);
+        const userExits = await getAuthorizedUser(accessToken);
 
-      const { userId } = tokenService.verifyAccessToken(accessToken, {
-        ignoreExpiration: true,
-      });
-      const userExits = await prisma.users.findUnique({
-        where: {
-          id: userId,
-        },
-      });
-      if (!userExits) {
-        throw new Error("User không tồn tại");
+        await ensureChatMember(normalizedChatGroupId, userExits.id);
+
+        socket.join(`chat:${normalizedChatGroupId}`);
+
+        cb?.({
+          status: "success",
+          message: "Join phòng thành công",
+          data: {
+            chatGroupId: normalizedChatGroupId,
+          },
+        });
+
+        console.log("tất cả các room", io.sockets.adapter.rooms);
+        console.log("JOIN_ROOM", {
+          chatGroupId: normalizedChatGroupId,
+          userId: userExits.id,
+        });
+      } catch (error) {
+        cb?.({
+          status: "error",
+          data: null,
+          message: error.message || "Lỗi không xác định",
+        });
       }
-
-      socket.join(`chat:${chatGroupId}`);
-
-      console.log("tất cả các room", io.sockets.adapter.rooms);
-
-      console.log("JOIN_ROOM", { chatGroupId, accessToken });
     });
 
-    socket.on("SEND_MESSAGE", async (data) => {
-      const { chatGroupId, message, accessToken } = data;
+    socket.on("SEND_MESSAGE", async (data, cb) => {
+      try {
+        const { chatGroupId, message, accessToken } = data;
+        const normalizedChatGroupId = Number(chatGroupId);
+        const normalizedMessage = message?.trim();
+        const userExits = await getAuthorizedUser(accessToken);
 
-      const { userId } = tokenService.verifyAccessToken(accessToken, {
-        ignoreExpiration: true,
-      });
-      const userExits = await prisma.users.findUnique({
-        where: {
-          id: userId,
-        },
-      });
-      if (!userExits) {
-        throw new Error("User không tồn tại");
+        if (!normalizedMessage) {
+          throw new Error("Nội dung tin nhắn không được để trống");
+        }
+
+        await ensureChatMember(normalizedChatGroupId, userExits.id);
+
+        const createdMessage = await prisma.chatMessages.create({
+          data: {
+            chatGroupId: normalizedChatGroupId,
+            messageText: normalizedMessage,
+            userIdSender: userExits.id,
+          },
+        });
+
+        const payload = {
+          // Map sang định dạng TAllmessage của frontend
+          messageText: createdMessage.messageText,
+          userIdSender: String(createdMessage.userIdSender),
+          chatGroupId: String(createdMessage.chatGroupId),
+          createdAt: createdMessage.createdAt,
+        };
+
+        io.to(`chat:${normalizedChatGroupId}`).emit("SEND_MESSAGE", payload);
+        cb?.({
+          status: "success",
+          message: "Gửi tin nhắn thành công",
+          data: payload,
+        });
+
+        console.log("SEND_MESSAGE", {
+          chatGroupId: normalizedChatGroupId,
+          userId: userExits.id,
+        });
+      } catch (error) {
+        cb?.({
+          status: "error",
+          data: null,
+          message: error.message || "Lỗi không xác định",
+        });
       }
-
-      const createdAt = new Date().toISOString();
-
-      io.to(`chat:${chatGroupId}`).emit(`SEND_MESSAGE`, {
-        messageText: message,
-        userIdSender: userExits.id,
-        chatGroupId: chatGroupId,
-        createdAt: createdAt,
-      });
-
-      // để sau io.to => để đạt tốc độ tốt nhất
-      await prisma.chatMessages.create({
-        data: {
-          chatGroupId: chatGroupId,
-          messageText: message,
-          userIdSender: userExits.id,
-          createdAt: createdAt,
-        },
-      });
-
-      console.log("SEND_MESSAGE", { chatGroupId, message, accessToken });
     });
   });
 

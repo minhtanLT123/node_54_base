@@ -1,4 +1,7 @@
-import { BadRequestException } from "../common/helpers/exception.helper.js";
+import {
+  BadRequestException,
+  UnauthorizedException,
+} from "../common/helpers/exception.helper.js";
 import { prisma } from "../common/prisma/connect.prisma.js";
 import bcrypt from "bcrypt";
 import { tokenService } from "./token.service.js";
@@ -6,12 +9,18 @@ import { tokenService } from "./token.service.js";
 export const authService = {
   async register(req) {
     // nhận dữ liệu từ FE gửi lên
-    const { email, password, fullname } = req.body;
+    const { email, password, fullname, fullName } = req.body;
+    const normalizedEmail = email?.trim()?.toLowerCase();
+    const normalizedFullName = fullName?.trim() || fullname?.trim();
+
+    if (!normalizedEmail || !password || !normalizedFullName) {
+      throw new BadRequestException("Vui lòng nhập đầy đủ email, mật khẩu và họ tên");
+    }
 
     // kiểm tra email có tồn tại trong db hay không
     const userExits = await prisma.users.findUnique({
       where: {
-        email: email,
+        email: normalizedEmail,
       },
     });
     if (userExits) {
@@ -30,9 +39,9 @@ export const authService = {
     // tao moi nguoi dung vao db
     const newUser = await prisma.users.create({
       data: {
-        email: email,
+        email: normalizedEmail,
         password: passwordHash,
-        fullName: fullname,
+        fullName: normalizedFullName,
       },
     });
     // console.log({ email, password, fullname, userExits, newUser });
@@ -44,9 +53,15 @@ export const authService = {
 
   async login(req) {
     const { email, password } = req.body;
+    const normalizedEmail = email?.trim()?.toLowerCase();
+
+    if (!normalizedEmail || !password) {
+      throw new BadRequestException("Vui lòng nhập email và mật khẩu");
+    }
+
     const userExits = await prisma.users.findUnique({
       where: {
-        email: email,
+        email: normalizedEmail,
       },
       omit: {
         password: false,
@@ -70,6 +85,12 @@ export const authService = {
     return {
       accessToken: accessToken,
       refreshToken: refreshToken,
+      user: {
+        id: userExits.id,
+        email: userExits.email,
+        fullName: userExits.fullName,
+        avatar: userExits.avatar,
+      },
     };
   },
 

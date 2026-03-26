@@ -120,65 +120,27 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
-exports.Prisma.ArticlesScalarFieldEnum = {
-  id: 'id',
-  title: 'title',
-  content: 'content',
-  imageUrl: 'imageUrl',
-  views: 'views',
-  userId: 'userId',
-  deletedBy: 'deletedBy',
-  isDeleted: 'isDeleted',
-  deletedAt: 'deletedAt',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.Articles_demoScalarFieldEnum = {
-  id: 'id',
-  title: 'title',
-  content: 'content',
-  imageUrl: 'imageUrl',
-  views: 'views',
-  userId: 'userId',
-  deletedBy: 'deletedBy',
-  isDeleted: 'isDeleted',
-  deletedAt: 'deletedAt',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.FoodsScalarFieldEnum = {
+exports.Prisma.RolesScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  description: 'description',
-  deletedBy: 'deletedBy',
-  isDeleted: 'isDeleted',
-  deletedAt: 'deletedAt',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  level: 'level',
+  description: 'description'
 };
 
-exports.Prisma.OrdersScalarFieldEnum = {
+exports.Prisma.PermissionsScalarFieldEnum = {
   id: 'id',
+  name: 'name',
+  description: 'description'
+};
+
+exports.Prisma.RolePermissionsScalarFieldEnum = {
+  roleId: 'roleId',
+  permissionId: 'permissionId'
+};
+
+exports.Prisma.UserRolesScalarFieldEnum = {
   userId: 'userId',
-  foodId: 'foodId'
-};
-
-exports.Prisma.UsersScalarFieldEnum = {
-  id: 'id',
-  email: 'email',
-  fullName: 'fullName',
-  avatar: 'avatar',
-  age: 'age',
-  totpSecret: 'totpSecret',
-  googleId: 'googleId',
-  deletedBy: 'deletedBy',
-  isDeleted: 'isDeleted',
-  deletedAt: 'deletedAt',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  password: 'password'
+  roleId: 'roleId'
 };
 
 exports.Prisma.DepartmentsScalarFieldEnum = {
@@ -188,29 +150,25 @@ exports.Prisma.DepartmentsScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
-exports.Prisma.RolesScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  level: 'level'
-};
-
-exports.Prisma.EmployeesScalarFieldEnum = {
+exports.Prisma.UsersScalarFieldEnum = {
   id: 'id',
   email: 'email',
-  fullName: 'fullName',
   password: 'password',
+  fullName: 'fullName',
   avatar: 'avatar',
   departmentId: 'departmentId',
-  roleId: 'roleId',
+  leaderId: 'leaderId',
   joinDate: 'joinDate',
   status: 'status',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt',
+  isDeleted: 'isDeleted'
 };
 
 exports.Prisma.AttendancesScalarFieldEnum = {
   id: 'id',
-  employeeId: 'employeeId',
+  userId: 'userId',
   date: 'date',
   checkIn: 'checkIn',
   checkOut: 'checkOut',
@@ -220,7 +178,7 @@ exports.Prisma.AttendancesScalarFieldEnum = {
 
 exports.Prisma.LeaveBalancesScalarFieldEnum = {
   id: 'id',
-  employeeId: 'employeeId',
+  userId: 'userId',
   year: 'year',
   totalDays: 'totalDays',
   usedDays: 'usedDays',
@@ -229,7 +187,7 @@ exports.Prisma.LeaveBalancesScalarFieldEnum = {
 
 exports.Prisma.LeaveRequestsScalarFieldEnum = {
   id: 'id',
-  employeeId: 'employeeId',
+  userId: 'userId',
   type: 'type',
   startDate: 'startDate',
   endDate: 'endDate',
@@ -241,7 +199,7 @@ exports.Prisma.LeaveRequestsScalarFieldEnum = {
 
 exports.Prisma.OvertimeRequestsScalarFieldEnum = {
   id: 'id',
-  employeeId: 'employeeId',
+  userId: 'userId',
   date: 'date',
   startTime: 'startTime',
   endTime: 'endTime',
@@ -256,7 +214,8 @@ exports.Prisma.ApprovalsScalarFieldEnum = {
   requestType: 'requestType',
   requestId: 'requestId',
   approverId: 'approverId',
-  level: 'level',
+  roleLevel: 'roleLevel',
+  stepOrder: 'stepOrder',
   status: 'status',
   comment: 'comment',
   approvedAt: 'approvedAt',
@@ -265,7 +224,7 @@ exports.Prisma.ApprovalsScalarFieldEnum = {
 
 exports.Prisma.PayrollsScalarFieldEnum = {
   id: 'id',
-  employeeId: 'employeeId',
+  userId: 'userId',
   month: 'month',
   year: 'year',
   baseSalary: 'baseSalary',
@@ -277,17 +236,20 @@ exports.Prisma.PayrollsScalarFieldEnum = {
 
 exports.Prisma.NotificationsScalarFieldEnum = {
   id: 'id',
-  employeeId: 'employeeId',
+  userId: 'userId',
   title: 'title',
   content: 'content',
   isRead: 'isRead',
   createdAt: 'createdAt'
 };
 
-exports.Prisma.ChatGroupMembersScalarFieldEnum = {
+exports.Prisma.ArticlesScalarFieldEnum = {
   id: 'id',
+  title: 'title',
+  content: 'content',
+  imageUrl: 'imageUrl',
+  views: 'views',
   userId: 'userId',
-  chatGroupId: 'chatGroupId',
   deletedBy: 'deletedBy',
   isDeleted: 'isDeleted',
   deletedAt: 'deletedAt',
@@ -299,6 +261,17 @@ exports.Prisma.ChatGroupsScalarFieldEnum = {
   id: 'id',
   name: 'name',
   ownerId: 'ownerId',
+  deletedBy: 'deletedBy',
+  isDeleted: 'isDeleted',
+  deletedAt: 'deletedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ChatGroupMembersScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  chatGroupId: 'chatGroupId',
   deletedBy: 'deletedBy',
   isDeleted: 'isDeleted',
   deletedAt: 'deletedAt',
@@ -328,44 +301,24 @@ exports.Prisma.NullsOrder = {
   last: 'last'
 };
 
-exports.Prisma.ArticlesOrderByRelevanceFieldEnum = {
-  title: 'title',
-  content: 'content',
-  imageUrl: 'imageUrl'
-};
-
-exports.Prisma.Articles_demoOrderByRelevanceFieldEnum = {
-  title: 'title',
-  content: 'content',
-  imageUrl: 'imageUrl'
-};
-
-exports.Prisma.FoodsOrderByRelevanceFieldEnum = {
+exports.Prisma.RolesOrderByRelevanceFieldEnum = {
   name: 'name',
   description: 'description'
 };
 
-exports.Prisma.UsersOrderByRelevanceFieldEnum = {
-  email: 'email',
-  fullName: 'fullName',
-  avatar: 'avatar',
-  totpSecret: 'totpSecret',
-  googleId: 'googleId',
-  password: 'password'
+exports.Prisma.PermissionsOrderByRelevanceFieldEnum = {
+  name: 'name',
+  description: 'description'
 };
 
 exports.Prisma.DepartmentsOrderByRelevanceFieldEnum = {
   name: 'name'
 };
 
-exports.Prisma.RolesOrderByRelevanceFieldEnum = {
-  name: 'name'
-};
-
-exports.Prisma.EmployeesOrderByRelevanceFieldEnum = {
+exports.Prisma.UsersOrderByRelevanceFieldEnum = {
   email: 'email',
-  fullName: 'fullName',
   password: 'password',
+  fullName: 'fullName',
   avatar: 'avatar'
 };
 
@@ -384,6 +337,12 @@ exports.Prisma.ApprovalsOrderByRelevanceFieldEnum = {
 exports.Prisma.NotificationsOrderByRelevanceFieldEnum = {
   title: 'title',
   content: 'content'
+};
+
+exports.Prisma.ArticlesOrderByRelevanceFieldEnum = {
+  title: 'title',
+  content: 'content',
+  imageUrl: 'imageUrl'
 };
 
 exports.Prisma.ChatGroupsOrderByRelevanceFieldEnum = {
@@ -408,9 +367,13 @@ exports.LeaveType = exports.$Enums.LeaveType = {
 };
 
 exports.RequestStatus = exports.$Enums.RequestStatus = {
-  PENDING: 'PENDING',
+  PENDING_LEADER: 'PENDING_LEADER',
+  PENDING_MANAGER: 'PENDING_MANAGER',
+  PENDING_DIRECTOR: 'PENDING_DIRECTOR',
+  PENDING_HR: 'PENDING_HR',
   APPROVED: 'APPROVED',
-  REJECTED: 'REJECTED'
+  REJECTED: 'REJECTED',
+  CANCELLED: 'CANCELLED'
 };
 
 exports.RequestType = exports.$Enums.RequestType = {
@@ -425,14 +388,12 @@ exports.ApprovalStatus = exports.$Enums.ApprovalStatus = {
 };
 
 exports.Prisma.ModelName = {
-  Articles: 'Articles',
-  Articles_demo: 'Articles_demo',
-  Foods: 'Foods',
-  Orders: 'Orders',
-  Users: 'Users',
-  Departments: 'Departments',
   Roles: 'Roles',
-  Employees: 'Employees',
+  Permissions: 'Permissions',
+  RolePermissions: 'RolePermissions',
+  UserRoles: 'UserRoles',
+  Departments: 'Departments',
+  Users: 'Users',
   Attendances: 'Attendances',
   LeaveBalances: 'LeaveBalances',
   LeaveRequests: 'LeaveRequests',
@@ -440,8 +401,9 @@ exports.Prisma.ModelName = {
   Approvals: 'Approvals',
   Payrolls: 'Payrolls',
   Notifications: 'Notifications',
-  ChatGroupMembers: 'ChatGroupMembers',
+  Articles: 'Articles',
   ChatGroups: 'ChatGroups',
+  ChatGroupMembers: 'ChatGroupMembers',
   ChatMessages: 'ChatMessages'
 };
 

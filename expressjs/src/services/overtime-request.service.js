@@ -1,26 +1,6 @@
-import crypto from "crypto";
+import { buildQueryPrisma } from "../common/helpers/build-query-prisma.helper.js";
 import { BadRequestException } from "../common/helpers/exception.helper.js";
 import { prisma } from "../common/prisma/connect.prisma.js";
-
-const OVERTIME_STATUS_PENDING = "pending";
-
-const createOvertimeTableIfNotExists = async () => {
-  await prisma.$executeRawUnsafe(`
-    CREATE TABLE IF NOT EXISTS overtime_requests (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      requestCode VARCHAR(36) NOT NULL UNIQUE,
-      userId INT NOT NULL,
-      date DATE NOT NULL,
-      startTime TIME NOT NULL,
-      endTime TIME NOT NULL,
-      reason TEXT NOT NULL,
-      status VARCHAR(50) NOT NULL DEFAULT 'pending',
-      createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-      updatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-      INDEX overtime_requests_user_id_idx (userId)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-  `);
-};
 
 const parseTimeToMinutes = (value) => {
   const [hour, minute] = String(value).split(":").map(Number);
@@ -53,48 +33,68 @@ const validatePayload = (body) => {
 export const overtimeRequestService = {
   async create(req) {
     validatePayload(req.body);
-    await createOvertimeTableIfNotExists();
-
-    const requestCode = crypto.randomUUID();
     const date = req.body.date;
     const startTime = req.body.startTime;
     const endTime = req.body.endTime;
     const reason = String(req.body.reason).trim();
 
-    await prisma.$executeRaw`
-      INSERT INTO overtime_requests (requestCode, userId, date, startTime, endTime, reason, status)
-      VALUES (${requestCode}, ${req.user.id}, ${date}, ${startTime}, ${endTime}, ${reason}, ${OVERTIME_STATUS_PENDING})
-    `;
+    const [year, month, day] = date.split("-").map(Number);
+    const [startHour, startMinute] = startTime.split(":").map(Number);
+    const [endHour, endMinute] = endTime.split(":").map(Number);
 
-    const rows = await prisma.$queryRaw`
-      SELECT
-        requestCode,
-        DATE_FORMAT(date, '%Y-%m-%d') AS date,
-        DATE_FORMAT(startTime, '%H:%i') AS startTime,
-        DATE_FORMAT(endTime, '%H:%i') AS endTime,
+    const startDateTime = new Date(
+      year,
+      month - 1,
+      day,
+      startHour,
+      startMinute,
+      0,
+    );
+    const endDateTime = new Date(year, month - 1, day, endHour, endMinute, 0);
+    const totalHours = Number(
+      (
+        (endDateTime.getTime() - startDateTime.getTime()) /
+        (1000 * 60 * 60)
+      ).toFixed(2),
+    );
+
+    const created = await prisma.overtimeRequests.create({
+      data: {
+        userId: req.user.id,
+        date: new Date(year, month - 1, day),
+        startTime: startDateTime,
+        endTime: endDateTime,
+        hours: totalHours,
         reason,
-        status,
-        createdAt,
-        updatedAt
-      FROM overtime_requests
-      WHERE requestCode = ${requestCode}
-      LIMIT 1
-    `;
-
-    const created = rows?.[0];
-    if (!created) {
-      throw new BadRequestException("Không thể tạo yêu cầu tăng ca");
-    }
+      },
+    });
 
     return {
-      id: created.requestCode,
-      date: created.date,
-      startTime: created.startTime,
-      endTime: created.endTime,
+      id: created.id,
+      date,
+      startTime,
+      endTime,
       reason: created.reason,
       status: created.status,
       createdAt: created.createdAt,
-      updatedAt: created.updatedAt,
     };
+  },
+
+  async findAll(req) {
+    const { index, page, pageSize, where } = buildQueryPrisma(req);
+    const baseWhere = { ...where, userId: req.user.id };
+
+    const [items, totalItem] = await Promise.all([
+      prisma.overtimeRequests.findMany({
+        where: baseWhere,
+        skip: index,
+        take: pageSize,
+        orderBy: { createdAt: "desc" },
+      }),
+      prisma.overtimeRequests.count({ where: baseWhere }),
+    ]);
+
+    const totalPage = Math.ceil(totalItem / pageSize);
+    return { totalItem, totalPage, page, pageSize, items };
   },
 };

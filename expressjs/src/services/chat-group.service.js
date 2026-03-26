@@ -1,4 +1,5 @@
 import { buildQueryPrisma } from "../common/helpers/build-query-prisma.helper.js";
+import { UnauthorizedException } from "../common/helpers/exception.helper.js";
 import { prisma } from "../common/prisma/connect.prisma.js";
 
 export const chatGroupService = {
@@ -7,33 +8,39 @@ export const chatGroupService = {
   },
 
   async findAll(req) {
-    // sequelize
-    // const resultSequelize = await Article.findAll();
-
     const { index, page, pageSize, where } = buildQueryPrisma(req);
-
-    const resultPrismaPromise = prisma.chatGroups.findMany({
-      where: {
-        // ...where,
-        ChatGroupMembers: {
-          some: {
-            userId: req.user.id,
-          },
+    const finalWhere = {
+      ...where,
+      ChatGroupMembers: {
+        some: {
+          userId: req.user.id,
+          isDeleted: false,
         },
       },
-      skip: index, // skip tương đương với OFFSET
-      take: pageSize, // take tương đương với LIMIT
+    };
+
+    const resultPrismaPromise = prisma.chatGroups.findMany({
+      where: finalWhere,
+      skip: index,
+      take: pageSize,
       include: {
         ChatGroupMembers: {
           include: {
             Users: true,
           },
         },
+        Users: true,
+        ChatMessages: {
+          take: 1,
+          orderBy: { createdAt: "desc" },
+        },
+      },
+      orderBy: {
+        updatedAt: "desc",
       },
     });
-    const totalItemPromise = prisma.chatMessages.count({
-      // ở findMany mà where cái gì thì đưa vào count giống như vậy
-      where: where,
+    const totalItemPromise = prisma.chatGroups.count({
+      where: finalWhere,
     });
 
     const [resultPrisma, totalItem] = await Promise.all([
@@ -44,15 +51,37 @@ export const chatGroupService = {
     const totalPage = Math.ceil(totalItem / pageSize);
 
     return {
-      totalItem: totalItem,
-      totalPage: totalPage,
-      page: page,
-      pageSize: pageSize,
+      totalItem,
+      totalPage,
+      page,
+      pageSize,
       items: resultPrisma,
     };
   },
   async findOne(req) {
-    return `This action returns a id: ${req.params.id} chatGroup`;
+    const chatGroupId = Number(req.params.id);
+    const chatGroup = await prisma.chatGroups.findUnique({
+      where: {
+        id: chatGroupId,
+      },
+      include: {
+        ChatGroupMembers: {
+          include: {
+            Users: true,
+          },
+        },
+        Users: true,
+      },
+    });
+
+    const isMember = chatGroup?.ChatGroupMembers.some(
+      (member) => member.userId === req.user.id,
+    );
+    if (!chatGroup || !isMember) {
+      throw new UnauthorizedException("Bạn không thuộc phòng chat này");
+    }
+
+    return chatGroup;
   },
 
   async update(req) {

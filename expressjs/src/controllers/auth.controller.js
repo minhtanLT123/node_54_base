@@ -10,7 +10,7 @@ export const authController = {
 
   async login(req, res, next) {
     const result = await authService.login(req);
-    const response = responseSuccess(true, `login auths successfully`);
+    const response = responseSuccess(result, `login auths successfully`);
     res.cookie("accessToken", result.accessToken);
     res.cookie("refreshToken", result.refreshToken);
 

@@ -8,183 +8,141 @@ datasource db {
   provider = "mysql"
 }
 
-model Articles {
-  id        Int       @id @default(autoincrement())
-  title     String?   @db.VarChar(255)
-  content   String?   @db.Text
-  imageUrl  String?   @db.VarChar(255)
-  views     Int       @default(0)
-  userId    Int?
-  deletedBy Int       @default(0)
-  isDeleted Boolean   @default(false)
-  deletedAt DateTime? @db.Timestamp(0)
-  createdAt DateTime  @default(now()) @db.Timestamp(0)
-  updatedAt DateTime  @default(now()) @db.Timestamp(0)
-  Users     Users?    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Articles_ibfk_1")
-
-  @@index([userId], map: "userId")
+model Roles {
+  id              Int               @id @default(autoincrement())
+  name            String            @unique
+  level           Int
+  description     String?
+  RolePermissions RolePermissions[]
+  UserRoles       UserRoles[]
 }
 
-model Articles_demo {
-  id        Int       @id @default(autoincrement())
-  title     String?   @db.VarChar(255)
-  content   String?   @db.Text
-  imageUrl  String?   @db.VarChar(255)
-  views     Int?      @default(0)
-  userId    Int
-  deletedBy Int?      @default(0)
-  isDeleted Boolean?  @default(false)
-  deletedAt DateTime? @db.Timestamp(0)
-  createdAt DateTime  @default(now()) @db.Timestamp(0)
-  updatedAt DateTime  @default(now()) @db.Timestamp(0)
-  Users     Users     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Articles_demo_ibfk_1")
-
-  @@index([userId], map: "userId")
+model Permissions {
+  id              Int               @id @default(autoincrement())
+  name            String            @unique
+  description     String?
+  RolePermissions RolePermissions[]
 }
 
-model Foods {
-  id          Int       @id @default(autoincrement())
-  name        String?   @db.VarChar(255)
-  description String?   @default("Chưa có thông tin") @db.VarChar(255)
-  deletedBy   Int       @default(0)
-  isDeleted   Boolean   @default(false)
-  deletedAt   DateTime? @db.Timestamp(0)
-  createdAt   DateTime  @default(now()) @db.Timestamp(0)
-  updatedAt   DateTime  @default(now()) @db.Timestamp(0)
-  Orders      Orders[]
+model RolePermissions {
+  roleId       Int
+  permissionId Int
+  permission   Permissions @relation(fields: [permissionId], references: [id])
+  role         Roles       @relation(fields: [roleId], references: [id])
+
+  @@id([roleId, permissionId])
+  @@index([permissionId], map: "RolePermissions_permissionId_fkey")
 }
 
-model Orders {
-  id     Int    @id @default(autoincrement())
-  userId Int?
-  foodId Int?
-  Users  Users? @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Orders_ibfk_1")
-  Foods  Foods? @relation(fields: [foodId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Orders_ibfk_2")
+model UserRoles {
+  userId Int
+  roleId Int
+  role   Roles @relation(fields: [roleId], references: [id])
+  user   Users @relation(fields: [userId], references: [id])
 
-  @@index([foodId], map: "foodId")
-  @@index([userId], map: "userId")
-}
-
-model Users {
-  id               Int                @id @default(autoincrement())
-  email            String             @unique(map: "email") @db.VarChar(255)
-  fullName         String?            @db.VarChar(255)
-  avatar           String?            @db.Text
-  age              Int?
-  totpSecret       String?            @db.VarChar(255)
-  googleId         String?            @db.VarChar(255)
-  deletedBy        Int                @default(0)
-  isDeleted        Boolean            @default(false)
-  deletedAt        DateTime?          @db.Timestamp(0)
-  createdAt        DateTime           @default(now()) @db.Timestamp(0)
-  updatedAt        DateTime           @default(now()) @db.Timestamp(0)
-  password         String?            @db.VarChar(255)
-  Articles         Articles[]
-  Articles_demo    Articles_demo[]
-  ChatGroupMembers ChatGroupMembers[]
-  ChatGroups       ChatGroups[]
-  ChatMessages     ChatMessages[]
-  Orders           Orders[]
+  @@id([userId, roleId])
+  @@index([roleId], map: "UserRoles_roleId_fkey")
 }
 
 model Departments {
-  id        Int         @id @default(autoincrement())
-  name      String      @unique
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
   managerId Int?
-  createdAt DateTime    @default(now())
-  manager   Employees?  @relation("DeptManager", fields: [managerId], references: [id])
-  Employees Employees[]
+  createdAt DateTime @default(now())
+  manager   Users?   @relation("DeptManager", fields: [managerId], references: [id])
+  users     Users[]
 
-  @@index([managerId], map: "Departments_managerId_fkey")
+  @@index([managerId])
 }
 
-model Roles {
-  id        Int         @id @default(autoincrement())
-  name      String      @unique
-  level     Int
-  Employees Employees[]
-}
-
-model Employees {
+model Users {
   id                 Int                @id @default(autoincrement())
   email              String             @unique
-  fullName           String
   password           String?
+  fullName           String
   avatar             String?
   departmentId       Int?
-  roleId             Int?
+  leaderId           Int?
   joinDate           DateTime?
   status             EmployeeStatus     @default(ACTIVE)
   createdAt          DateTime           @default(now())
   updatedAt          DateTime           @updatedAt
-  Approvals          Approvals[]
-  Attendances        Attendances[]
+  deletedAt          DateTime?
+  isDeleted          Boolean            @default(false)
+  approvals          Approvals[]
+  articles           Articles[]
+  attendances        Attendances[]
+  chatMemberships    ChatGroupMembers[]
+  ownedChatGroups    ChatGroups[]
+  sentMessages       ChatMessages[]
   managedDepartments Departments[]      @relation("DeptManager")
-  Departments        Departments?       @relation(fields: [departmentId], references: [id])
-  Roles              Roles?             @relation(fields: [roleId], references: [id])
-  LeaveBalances      LeaveBalances[]
-  LeaveRequests      LeaveRequests[]
-  Notifications      Notifications[]
-  OvertimeRequests   OvertimeRequests[]
-  Payrolls           Payrolls[]
+  leaveBalances      LeaveBalances[]
+  leaveRequests      LeaveRequests[]
+  notifications      Notifications[]
+  overtimeRequests   OvertimeRequests[]
+  payrolls           Payrolls[]
+  roles              UserRoles[]
+  department         Departments?       @relation(fields: [departmentId], references: [id])
+  leader             Users?             @relation("LeaderSub", fields: [leaderId], references: [id])
+  subordinates       Users[]            @relation("LeaderSub")
 
-  @@index([departmentId], map: "Employees_departmentId_fkey")
-  @@index([roleId], map: "Employees_roleId_fkey")
+  @@index([departmentId])
+  @@index([leaderId])
 }
 
 model Attendances {
   id           Int       @id @default(autoincrement())
-  employeeId   Int
+  userId       Int
   date         DateTime  @db.Date
   checkIn      DateTime?
   checkOut     DateTime?
   workingHours Float?
   lateMinutes  Int       @default(0)
-  Employees    Employees @relation(fields: [employeeId], references: [id])
+  user         Users     @relation(fields: [userId], references: [id])
 
-  @@unique([employeeId, date])
+  @@unique([userId, date])
 }
 
 model LeaveBalances {
-  id         Int       @id @default(autoincrement())
-  employeeId Int
+  id         Int   @id @default(autoincrement())
+  userId     Int
   year       Int
   totalDays  Float
-  usedDays   Float     @default(0)
+  usedDays   Float @default(0)
   remainDays Float
-  Employees  Employees @relation(fields: [employeeId], references: [id])
+  user       Users @relation(fields: [userId], references: [id])
 
-  @@unique([employeeId, year])
+  @@unique([userId, year])
 }
 
 model LeaveRequests {
-  id         Int           @id @default(autoincrement())
-  employeeId Int
-  type       LeaveType
-  startDate  DateTime      @db.Date
-  endDate    DateTime      @db.Date
-  totalDays  Float
-  reason     String?
-  status     RequestStatus @default(PENDING)
-  createdAt  DateTime      @default(now())
-  Employees  Employees     @relation(fields: [employeeId], references: [id])
+  id        Int           @id @default(autoincrement())
+  userId    Int
+  type      LeaveType
+  startDate DateTime      @db.Date
+  endDate   DateTime      @db.Date
+  totalDays Float
+  reason    String?
+  status    RequestStatus @default(PENDING_LEADER)
+  createdAt DateTime      @default(now())
+  user      Users         @relation(fields: [userId], references: [id])
 
-  @@index([employeeId], map: "LeaveRequests_employeeId_fkey")
+  @@index([userId])
 }
 
 model OvertimeRequests {
-  id         Int           @id @default(autoincrement())
-  employeeId Int
-  date       DateTime      @db.Date
-  startTime  DateTime
-  endTime    DateTime
-  hours      Float
-  reason     String?
-  status     RequestStatus @default(PENDING)
-  createdAt  DateTime      @default(now())
-  Employees  Employees     @relation(fields: [employeeId], references: [id])
+  id        Int           @id @default(autoincrement())
+  userId    Int
+  date      DateTime      @db.Date
+  startTime DateTime
+  endTime   DateTime
+  hours     Float
+  reason    String?
+  status    RequestStatus @default(PENDING_LEADER)
+  createdAt DateTime      @default(now())
+  user      Users         @relation(fields: [userId], references: [id])
 
-  @@index([employeeId], map: "OvertimeRequests_employeeId_fkey")
+  @@index([userId])
 }
 
 model Approvals {
@@ -192,20 +150,21 @@ model Approvals {
   requestType RequestType
   requestId   Int
   approverId  Int
-  level       Int
+  roleLevel   Int
+  stepOrder   Int
   status      ApprovalStatus @default(PENDING)
   comment     String?
   approvedAt  DateTime?
   createdAt   DateTime       @default(now())
-  Employees   Employees      @relation(fields: [approverId], references: [id])
+  approver    Users          @relation(fields: [approverId], references: [id])
 
   @@index([requestType, requestId])
   @@index([approverId], map: "Approvals_approverId_fkey")
 }
 
 model Payrolls {
-  id          Int       @id @default(autoincrement())
-  employeeId  Int
+  id          Int   @id @default(autoincrement())
+  userId      Int
   month       Int
   year        Int
   baseSalary  Float
@@ -213,37 +172,38 @@ model Payrolls {
   deduction   Float
   bonus       Float
   netSalary   Float
-  Employees   Employees @relation(fields: [employeeId], references: [id])
+  user        Users @relation(fields: [userId], references: [id])
 
-  @@unique([employeeId, month, year])
+  @@unique([userId, month, year])
 }
 
 model Notifications {
-  id         Int       @id @default(autoincrement())
-  employeeId Int
-  title      String
-  content    String
-  isRead     Boolean   @default(false)
-  createdAt  DateTime  @default(now())
-  Employees  Employees @relation(fields: [employeeId], references: [id])
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  title     String
+  content   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user      Users    @relation(fields: [userId], references: [id])
 
-  @@index([employeeId], map: "Notifications_employeeId_fkey")
+  @@index([userId])
 }
 
-model ChatGroupMembers {
-  id          Int         @id @default(autoincrement())
-  userId      Int?
-  chatGroupId Int?
-  deletedBy   Int         @default(0)
-  isDeleted   Boolean     @default(false)
-  deletedAt   DateTime?   @db.Timestamp(0)
-  createdAt   DateTime    @default(now()) @db.Timestamp(0)
-  updatedAt   DateTime    @default(now()) @db.Timestamp(0)
-  Users       Users?      @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "ChatGroupMembers_ibfk_1")
-  ChatGroups  ChatGroups? @relation(fields: [chatGroupId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "ChatGroupMembers_ibfk_2")
+model Articles {
+  id        Int       @id @default(autoincrement())
+  title     String?
+  content   String?
+  imageUrl  String?
+  views     Int       @default(0)
+  userId    Int?
+  deletedBy Int       @default(0)
+  isDeleted Boolean   @default(false)
+  deletedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now())
+  user      Users?    @relation(fields: [userId], references: [id])
 
-  @@index([chatGroupId], map: "chatGroupId")
-  @@index([userId], map: "userId")
+  @@index([userId])
 }
 
 model ChatGroups {
@@ -260,6 +220,22 @@ model ChatGroups {
   ChatMessages     ChatMessages[]
 
   @@index([ownerId], map: "ownerId")
+}
+
+model ChatGroupMembers {
+  id          Int         @id @default(autoincrement())
+  userId      Int?
+  chatGroupId Int?
+  deletedBy   Int         @default(0)
+  isDeleted   Boolean     @default(false)
+  deletedAt   DateTime?   @db.Timestamp(0)
+  createdAt   DateTime    @default(now()) @db.Timestamp(0)
+  updatedAt   DateTime    @default(now()) @db.Timestamp(0)
+  Users       Users?      @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "ChatGroupMembers_ibfk_1")
+  ChatGroups  ChatGroups? @relation(fields: [chatGroupId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "ChatGroupMembers_ibfk_2")
+
+  @@index([chatGroupId], map: "chatGroupId")
+  @@index([userId], map: "userId")
 }
 
 model ChatMessages {
@@ -287,9 +263,13 @@ enum EmployeeStatus {
 }
 
 enum RequestStatus {
-  PENDING
+  PENDING_LEADER
+  PENDING_MANAGER
+  PENDING_DIRECTOR
+  PENDING_HR
   APPROVED
   REJECTED
+  CANCELLED
 }
 
 enum LeaveType {

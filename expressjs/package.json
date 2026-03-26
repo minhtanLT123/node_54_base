@@ -10,7 +10,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon server.js",
     "start": "node server.js",
-    "prisma": "npx prisma db pull && npx prisma generate"
+    "seed-admin": "node ./scripts/seed-admin.js",
+    "prisma-pull": "npx prisma db pull && npx prisma generate",
+    "prisma-push": "npx prisma db push && npx prisma generate"
   },
   "dependencies": {
     "@prisma/adapter-mariadb": "^7.4.1",

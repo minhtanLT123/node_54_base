@@ -1,5 +1,9 @@
 import { tokenService } from "../../services/token.service.js";
-import { UnauthorizedException } from "../helpers/exception.helper.js";
+import {
+  errorCodes,
+  ForbiddenException,
+  UnauthorizedException,
+} from "../helpers/exception.helper.js";
 import { prisma } from "../prisma/connect.prisma.js";
 
 export const protect = async (req, res, next) => {
@@ -7,7 +11,20 @@ export const protect = async (req, res, next) => {
   if (!accessToken) {
     throw new UnauthorizedException("Không có token");
   }
-  const decode = tokenService.verifyAccessToken(accessToken);
+
+  let decode;
+  try {
+    decode = tokenService.verifyAccessToken(accessToken);
+  } catch (error) {
+    if (error.name === "TokenExpiredError") {
+      // 403: FE sẽ tự động gọi api refresh-token rồi retry lại request
+      throw new ForbiddenException(
+        "Token đã hết hạn",
+        errorCodes.TOKEN_EXPIRED,
+      );
+    }
+    throw new UnauthorizedException("Token không hợp lệ");
+  }
   const userExits = await prisma.users.findUnique({
     where: {
       id: decode.userId,

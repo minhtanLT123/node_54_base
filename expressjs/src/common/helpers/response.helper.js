@@ -23,11 +23,13 @@ export const responseError = (
   message = "Internal Server Error",
   statusCode = statusCodes.INTERNAL_SERVER_ERROR,
   stack,
+  errorCode,
 ) => {
   return {
     status: "error",
     statusCode: statusCode,
     message: message,
+    errorCode: errorCode,
     stack: stack, // chỉ nên show khi ở môi trường deverloper, còn khi lên prodtion thì tắt
     doc: "swagger.com",
   };
